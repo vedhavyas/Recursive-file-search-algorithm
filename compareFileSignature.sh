@@ -6,7 +6,12 @@ exit 0 ;
 fi
 
 tempFile="temporaryFile";
-finalFile="comparedResults";
+finalFile="comparedResults.txt";
+
+if [ -f $finalFile ] ; then
+rm -rf $finalFile ;
+fi
+
 sort $1 > temp1;
 sort $2 > temp2;
 diff temp1 temp2 > $tempFile;
@@ -14,6 +19,7 @@ rm -rf temp1 temp2 ;
 
 if [[ -s $tempFile ]] ; then
 echo "Md5 bytes didnt match. Please check $finalFile for more details";
+echo "Failed" >> $finalFile;
 echo -e "Mismatched Data in $1 :  " >> $finalFile;
 echo "-----------------------" >> $finalFile;
 str=`awk '{if ($1 == "<"){ print $2 }}' $tempFile`;
@@ -31,6 +37,7 @@ echo `grep $i $4` >> $finalFile;
 done
 echo "-----------------------" >> $finalFile;
 else
+echo "Sucess" >> $finalFile;
 echo "Congratulations.... Md5 bytes Matched" >> $finalFile;
 echo "Congratulations.... Md5 bytes Matched";
 fi ;

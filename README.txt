@@ -36,10 +36,11 @@ Usage of the tool :
    1. host_summary.txt - contains the Host Details like Server info, Memory info 
    2. MD5sum file - name of the file will be same as the 3rd command line argument given during the start of the script. Holds filename and its MD5sum bytes
    3. processedFilePath.txt - contains File and is path to file (Relative path)
+   4. uniqueNumber.txt - Contains a unique number of MD5sum file
 
 4. Follow steps 1,2,3 at the production as well as CM site.
 
-5. After the 4th step, there will be host_summary.txt, MD5sum file, processedFilePath.txt for each site.
+5. After the 4th step, there will be host_summary.txt, MD5sum file, processedFilePath.txt, and uniqueNumber.txt for each site.
 
 6. CompareFileSignature.sh - compare the MD5 files of the both sites
    Usage: sh compareFileSignature.sh <Md5file 1> <Md5file 2> <processedFilePath 1> <processedFilePath 2> 

@@ -25,7 +25,7 @@ echo -n ".";
 sleep 3;
 done
 echo "...done";
-echo "Data Capturing is done - please check the build/patch folder for the summary files";
+echo "Data capturing is done";
 else
 echo "Not enough available space on the File system where the temporary directory exists";
 fi

@@ -5,12 +5,16 @@
 tempFolder=$2/temp;
 absPath=$1;
 finalFile=$4/$3;
-processedFile=$4/processedFilePath.txt;
+appendName=`echo $3 | awk -F. '{print $1}'`;
+processedFile=$4/$appendName-processedFilePath.txt;
 cpuSummary=$4/host_summary.txt;
 configFile=$4/config.txt;
+uniqueFile=$4/uniqueNumber.txt;
 SAVEIFS=$IFS;
 unwar=`echo $5 | awk -F= '{print $NF}'`;
 IFS=$(echo -en "\n\b");
+excludeList=`cat $configFile | grep exclude | awk -F'[=,]' '{for(i=2;i<=NF;i++){print $i}}'`;
+includeList=`cat $configFile | grep include | awk -F'[=,]' '{for(i=2;i<=NF;i++){print $i}}'`;
 
 ## tarFile function starts here##
 tarFile(){
@@ -30,7 +34,8 @@ ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
 retInc=0;
-for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+for s in $excludeList
 do
 if [ $file == $s ]
 then
@@ -59,11 +64,12 @@ then
   elif [[ $j =~ \.zip$ ]]; then
      zipFile $j `pwd`;
   elif [[ $j =~ \.war$ ]]; then
-       if [$unwar == 'true'];then
+       if [ $unwar == 'true' ];then
        mv $j $file.zip;
        zipFile $j `pwd`;
        else
-         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         for t in $includeList
          do
 	     if [ $ext == $t ]
          then
@@ -90,7 +96,8 @@ then
         fi
       fi 	 
   else
-    for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    for t in $includeList
     do
 	if [ $ext == $t ]
     then
@@ -143,7 +150,8 @@ ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
 retInc=0;
-for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+for s in $excludeList
 do
 if [ $file == $s ]
 then
@@ -172,10 +180,11 @@ then
   elif [[ $m =~ \.zip$ ]]; then
      zipFile $m `pwd`;
   elif [[ $m =~ \.war$ ]]; then
-       if [$unwar == 'true'];then
+       if [ $unwar == 'true' ];then
        zipFile $m `pwd`;
        else
-         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         for t in $includeList
          do
 	     if [ $ext == $t ]
          then
@@ -202,7 +211,8 @@ then
         fi
       fi 	 
   else
-    for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    for t in $includeList
     do
 	if [ $ext == $t ]
     then
@@ -255,7 +265,8 @@ ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
 retInc=0;
-for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+for s in $excludeList
 do
 if [ $file == $s ]
 then
@@ -284,10 +295,11 @@ then
   elif [[ $l =~ \.zip$ ]]; then
      zipFile $l `pwd`;
   elif [[ $l =~ \.war$ ]]; then
-       if [$unwar == 'true'];then
+       if [ $unwar == 'true' ];then
        zipFile $l `pwd`;
        else
-         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         for t in $includeList
          do
 	     if [ $ext == $t ]
          then
@@ -314,7 +326,8 @@ then
         fi
       fi 
   else
-    for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    for t in $includeList
     do
 	if [ $ext == $t ]
     then
@@ -362,7 +375,8 @@ ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
 retInc=0;
-for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+for s in $excludeList
 do
 if [ $file == $s ]
 then
@@ -391,10 +405,11 @@ elif [[ $k =~ \.t?bz$ ]]; then
 elif [[ $k =~ \.zip$ ]]; then
     zipFile $k `pwd`;
 elif [[ $k =~ \.war$ ]]; then
-       if [$unwar == 'true'];then
+       if [ $unwar == 'true' ];then
        zipFile $k `pwd`;
        else
-         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         for t in $includeList
          do
 	     if [ $ext == $t ]
          then
@@ -421,7 +436,8 @@ elif [[ $k =~ \.war$ ]]; then
         fi
       fi 	
 else
-    for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    for t in $includeList
     do
 	if [ $ext == $t ]
     then
@@ -471,6 +487,10 @@ if [ -f $processedFile ] ; then
 rm -rf $processedFile ;
 fi
 
+if [ -f $uniqueFile ] ; then
+rm -rf $uniqueFile ;
+fi
+
 if [ -f $cpuSummary ] ; then
 rm -rf $cpuSummary ;
 fi
@@ -508,7 +528,8 @@ ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
 retInc=0;
-for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+for s in $excludeList
 do
 if [ $file == $s ]
 then
@@ -539,7 +560,8 @@ then
        if [ $unwar == 'true' ];then
        zipFile $i `pwd`;
        else
-         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         for t in $includeList
          do
 	     if [ $ext == $t ]
          then
@@ -566,7 +588,8 @@ then
         fi
       fi      
   else
-    for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    for t in $includeList
     do
 	if [ $ext == $t ]
     then
@@ -597,5 +620,6 @@ fi
 fi
 done
 fi
+echo `sort $finalFile | cksum` >> $uniqueFile;
 rm -rf $tempFolder;
 IFS=$SAVEIFS;
