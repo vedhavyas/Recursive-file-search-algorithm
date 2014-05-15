@@ -1,0 +1,25 @@
+#!/bin/bash
+#set -x;
+
+if [ $# -lt 3 ] ; then
+echo -e "Usage: $0 <absolute path to build> <absolute path to a temporary directory> <outputfile name>\n"  ;
+exit 0 ;
+fi
+
+buildSize=`du -c $1 | grep total | awk '{print $1}'`;
+tempSize=`df -kP $2 | awk '$3 ~ /[0-9]+/ { print $4 }'`;
+buildSize=$(( buildSize * 3 ));
+if [ $tempSize -ge $buildSize ]; then
+sh getFileSignature.sh $1 $2 $3 `pwd` &
+pid=`ps -ef |grep "getFileSignature.sh" | awk '{if ($8 == "sh" && $9 == "getFileSignature.sh") {print $2}}'`;
+echo  -n "Please wait - capturing MD5sum .";
+while [ `ps aux | awk '{print $2 }' | grep $pid 2> /dev/null` ]
+do
+echo -n ".";
+sleep 3;
+done
+echo "...done";
+echo "Data Capturing is done - please check the build/patch folder for the summary files";
+else
+echo "Not enough available space on the File system where the temporary directory exists";
+fi
