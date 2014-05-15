@@ -18,7 +18,12 @@ Usage of the tool :
 'CD ' into the "sanityTestTool" directory.
 
 
-1. config.txt - add the list of necessary extensions that are to excluded in a single line with (,) as a seperator. Most of the commonly excluded extensions are already included in it.
+1. config.txt - 
+      exclude = add the list of necessary extensions, files, binaries,folders  that are to excluded in a single line with (,) as a seperator. Most of the commonly excluded extensions are already included in it.
+
+      include = list of extensions and binaries that are to be processed in a single line with (,) as a seperator.
+
+***(NOTE : if the source folder contains unnecessary files,folders which doesnt have to be processed, add those files to exclude list.)
 
 2. startProcess.sh - requires 3 command line arguments
    Usage: sh startProcess.sh <absolute path to build> <absolute path to a temporary directory> <outputfile name>

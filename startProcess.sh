@@ -7,7 +7,13 @@ exit 0 ;
 fi
 
 buildSize=`du -c $1 | grep total | awk '{print $1}'`;
+df -kP $2 | awk '$3 ~ /[0-9]+/ { print $4 }' >/dev/null;
+if [ $? != 0 ] 
+then
+tempSize=`df -k $2 | awk '$3 ~ /[0-9]+/ { print $4 }'`;
+else 
 tempSize=`df -kP $2 | awk '$3 ~ /[0-9]+/ { print $4 }'`;
+fi
 buildSize=$(( buildSize * 3 ));
 if [ $tempSize -ge $buildSize ]; then
 sh getFileSignature.sh $1 $2 $3 `pwd` &
