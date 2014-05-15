@@ -22,13 +22,13 @@ else
 sh getFileSignature.sh $1 $2 $3 `pwd` $4 &
 fi
 pid=`ps -ef |grep "getFileSignature.sh" | awk '{if ($8 == "sh" && $9 == "getFileSignature.sh") {print $2}}'`;
-echo  -n "Please wait - capturing MD5sum .";
+echo  -n "Please wait - capturing MD5sum ";
 while [ `ps aux | awk '{print $2 }' | grep $pid 2> /dev/null` ]
 do
-echo -n ".";
+echo -n "/\/";
 sleep 3;
 done
-echo "...done";
+echo "\/ done";
 echo "Data capturing is done";
 else
 echo "Not enough available space on the File system where the temporary directory exists";

@@ -5,8 +5,9 @@ echo -e "Usage: $0 <Md5file1> <Md5file2> <processedFilePath1> <processedFilePath
 exit 0 ;
 fi
 
-tempFile=$5_temporaryFile;
-finalFile=$5;
+tempFile=$5_temporaryFile
+finalFile=$5
+totFiles=`cat $1 | wc -l`
 
 if [ -f $finalFile ] ; then
 rm -rf $finalFile ;
@@ -19,7 +20,10 @@ rm -rf $5_temp1 $5_temp2 ;
 
 if [[ -s $tempFile ]] ; then
 echo "Md5 bytes didnt match. Please check $finalFile for more details";
-echo "Failed" >> $finalFile;
+echo "Failed" >> $finalFile
+failedFiles=`cat $tempFile | grep "<" | wc -l`
+perSucess=`echo "scale=2; (1-($failedFiles/$totFiles))*100" | bc`
+echo $perSucess >> $finalFile
 echo -e "Mismatched Data in $1 :  " >> $finalFile;
 echo "-----------------------" >> $finalFile;
 str=`awk '{if ($1 == "<"){ print $2 }}' $tempFile`;
@@ -38,6 +42,7 @@ done
 echo "-----------------------" >> $finalFile;
 else
 echo "Sucess" >> $finalFile;
+echo "100.00" >> $finalFile;
 echo "Congratulations.... Md5 bytes Matched" >> $finalFile;
 echo "Congratulations.... Md5 bytes Matched";
 fi ;

@@ -544,12 +544,12 @@ echo "================================" >> $cpuSummary;
 
 if [ "$(ls -A $tempFolder)" ]; then
 mainList=$tempFolder/*;
-echo "==============================" >> $finalFile;
-echo "   File Name - Md5Sum Bytes   "  >> $finalFile;
-echo "==============================" >> $finalFile;
-echo "==============================" >> $processedFile;
-echo "   File name - File path      " >> $processedFile;
-echo "==============================" >> $processedFile; 
+#echo "==============================" >> $finalFile;
+#echo "   File Name - Md5Sum Bytes   "  >> $finalFile;
+#echo "==============================" >> $finalFile;
+#echo "==============================" >> $processedFile;
+#echo "   File name - File path      " >> $processedFile;
+#echo "==============================" >> $processedFile; 
 
 for i in $mainList
 do
