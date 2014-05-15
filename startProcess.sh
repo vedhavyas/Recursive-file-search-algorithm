@@ -16,7 +16,11 @@ tempSize=`df -kP $2 | awk '$3 ~ /[0-9]+/ { print $4 }'`;
 fi
 buildSize=$(( buildSize * 3 ));
 if [ $tempSize -ge $buildSize ]; then
+if [ $# -eq 3 ] ; then
+sh getFileSignature.sh $1 $2 $3 `pwd` unwar=false &
+else 
 sh getFileSignature.sh $1 $2 $3 `pwd` $4 &
+fi
 pid=`ps -ef |grep "getFileSignature.sh" | awk '{if ($8 == "sh" && $9 == "getFileSignature.sh") {print $2}}'`;
 echo  -n "Please wait - capturing MD5sum .";
 while [ `ps aux | awk '{print $2 }' | grep $pid 2> /dev/null` ]

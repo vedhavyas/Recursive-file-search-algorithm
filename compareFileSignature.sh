@@ -1,21 +1,21 @@
 #!/bin/bash
 
-if [ $# -lt 4 ] ; then
-echo -e "Usage: $0 <Md5file1> <Md5file2> <processedFilePath1> <processedFilePath2>\n"  ;
+if [ $# -lt 5 ] ; then
+echo -e "Usage: $0 <Md5file1> <Md5file2> <processedFilePath1> <processedFilePath2> <OutPut File name>\n"  ;
 exit 0 ;
 fi
 
-tempFile="temporaryFile";
-finalFile="comparedResults.txt";
+tempFile=$5_temporaryFile;
+finalFile=$5;
 
 if [ -f $finalFile ] ; then
 rm -rf $finalFile ;
 fi
 
-sort $1 > temp1;
-sort $2 > temp2;
-diff temp1 temp2 > $tempFile;
-rm -rf temp1 temp2 ; 
+sort $1 > $5_temp1;
+sort $2 > $5_temp2;
+diff $5_temp1 $5_temp2 > $tempFile;
+rm -rf $5_temp1 $5_temp2 ; 
 
 if [[ -s $tempFile ]] ; then
 echo "Md5 bytes didnt match. Please check $finalFile for more details";

@@ -21,7 +21,7 @@ Usage of the tool :
 1. config.txt - 
       exclude = add the list of necessary extensions, files, binaries,folders  that are to excluded in a single line with (,) as a seperator. Most of the commonly excluded extensions are already included in it.
 
-      include = list of extensions and binaries that are to be processed in a single line with (,) as a seperator.
+      include = list of extensions and binaries and files that are to be processed in a single line with (,) as a seperator.
 
 ***(NOTE : if the source folder contains unnecessary files,folders which doesnt have to be processed, add those files to exclude list.)
 
@@ -32,7 +32,7 @@ Usage of the tool :
    absolute path to a temporary directory - The path on a filesystem which holds thrice the size of the build.
    outputfile name - File to which the MD5sum bytes to be written.
 
-3. Once the operation is done, script will generate 3 files in the "sanityTestTool" directory 
+3. Once the operation is done, script will generate 4 files in the "sanityTestTool" directory 
    1. host_summary.txt - contains the Host Details like Server info, Memory info 
    2. MD5sum file - name of the file will be same as the 3rd command line argument given during the start of the script. Holds filename and its MD5sum bytes
    3. processedFilePath.txt - contains File and is path to file (Relative path)
@@ -43,7 +43,7 @@ Usage of the tool :
 5. After the 4th step, there will be host_summary.txt, MD5sum file, processedFilePath.txt, and uniqueNumber.txt for each site.
 
 6. CompareFileSignature.sh - compare the MD5 files of the both sites
-   Usage: sh compareFileSignature.sh <Md5file 1> <Md5file 2> <processedFilePath 1> <processedFilePath 2> 
+   Usage: sh compareFileSignature.sh <Md5file 1> <Md5file 2> <processedFilePath 1> <processedFilePath 2> <Output File name> 
    Md5file 1 - MD5file of site 1
    Md5file 2 - MD5file of site 2
    processedFilePath 1 - ProcessedFilePath.txt of site 1

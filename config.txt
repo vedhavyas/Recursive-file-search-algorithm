@@ -1,2 +1,2 @@
-include=class,war,jar,c
+include=war,test.c
 exclude=smsgateway,huge.class,test

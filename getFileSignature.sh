@@ -9,7 +9,7 @@ appendName=`echo $3 | awk -F. '{print $1}'`;
 processedFile=$4/$appendName-processedFilePath.txt;
 cpuSummary=$4/host_summary.txt;
 configFile=$4/config.txt;
-uniqueFile=$4/uniqueNumber.txt;
+uniqueFile=$4/$3_uniqueNumber.txt;
 SAVEIFS=$IFS;
 unwar=`echo $5 | awk -F= '{print $NF}'`;
 IFS=$(echo -en "\n\b");
@@ -18,8 +18,6 @@ includeList=`cat $configFile | grep include | awk -F'[=,]' '{for(i=2;i<=NF;i++){
 
 ## tarFile function starts here##
 tarFile(){
-#dir=`echo $1 | awk -F. '{t="";for(i=1;i<=NF-1;i++){ t=t$i"."} printf("%s",t)}'`;
-#dir=`echo "${dir%?}"`;
 dir=`echo $1 | awk -F. '{print $1}'`;
 mkdir -p $dir
 tar -x --file=$1 --overwrite -C $dir;
@@ -33,8 +31,7 @@ file=`echo $j | awk -F/ '{print $NF}'`;
 ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
-retInc=0;
-#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
+
 for s in $excludeList
 do
 if [ $file == $s ]
@@ -47,9 +44,7 @@ retExt=1;
 fi
 done
 
-if [ $retFile != 1 ]
-then
-if [ $retExt != 1 ]
+if [ $retFile != 1 -o $retExt != 1 ]
 then
   if [ -d $j ] ; then
      folder $j `pwd`;
@@ -68,15 +63,20 @@ then
        mv $j $file.zip;
        zipFile $j `pwd`;
        else
-         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         retFile=0;
+         retExt=0;
          for t in $includeList
          do
-	     if [ $ext == $t ]
+	 if [ $ext == $t ]
          then
-         retInc=1;
+         retExt=1;
+         fi
+         if [ $file == $t ]
+         then
+         retFile=1;
          fi
          done
-         if [ $retInc == 1 ]
+         if [ $retFile == 1 -o $retExt == 1 ]
          then
          echo -n `basename $j` >> $finalFile;
          echo -n `basename $j` >> $processedFile;
@@ -93,18 +93,25 @@ then
                                print t;
                        }' >> $processedFile;
          echo `md5sum $j | awk '{print " - "  $1}'`   >> $finalFile;
+         retFile=0;
+         retExt=0;
         fi
       fi 	 
   else
-    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    retFile=0;
+    retExt=0;
     for t in $includeList
     do
-	if [ $ext == $t ]
+    if [ $ext == $t ]
     then
-    retInc=1;
+    retExt=1;
+    fi
+    if [ $file == $t ]
+    then
+    retFile=1;
     fi
     done
-	if [ $retInc == 1 ]
+    if [ $retExt == 1 -o $retFile == 1 ]
     then
      echo -n `basename $j` >> $finalFile;
      echo -n `basename $j` >> $processedFile;
@@ -121,9 +128,10 @@ then
                                print t;
                        }' >> $processedFile;
      echo `md5sum $j | awk '{print " - "  $1}'`   >> $finalFile;
+     retFile=0;
+     retExt=0;
     fi
   fi
-fi
 fi
 fi
 done
@@ -134,8 +142,6 @@ cd $2;
 ## zipFile function starts here ##
 zipFile(){
 
-#dir=`echo $1 | awk -F. '{t="";for(i=1;i<=NF-1;i++){ t=t$i"."} printf("%s",t)}'`;
-#dir=`echo "${dir%?}"`;
 dir=`echo $1 | awk -F. '{print $1}'`;
 mkdir -p $dir
 cd $dir;
@@ -149,8 +155,6 @@ file=`echo $m | awk -F/ '{print $NF}'`;
 ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
-retInc=0;
-#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
 for s in $excludeList
 do
 if [ $file == $s ]
@@ -163,9 +167,7 @@ retExt=1;
 fi
 done
 
-if [ $retFile != 1 ]
-then
-if [ $retExt != 1 ]
+if [ $retFile != 1 -o $retExt != 1 ]
 then
   if [ -d $m ] ; then
      folder $m `pwd`;
@@ -183,15 +185,20 @@ then
        if [ $unwar == 'true' ];then
        zipFile $m `pwd`;
        else
-         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         retFile=0;
+         retExt=0;
          for t in $includeList
          do
-	     if [ $ext == $t ]
+	 if [ $ext == $t ]
          then
-         retInc=1;
+         retExt=1;
          fi
+         if [ $file == $t ]
+         then
+         retFile=1;
+         fi  
          done
-         if [ $retInc == 1 ]
+         if [ $retExt == 1 -o $retFile == 1 ]
          then
          echo -n `basename $m` >> $finalFile;
          echo -n `basename $m` >> $processedFile;
@@ -208,18 +215,25 @@ then
                                print t;
                        }' >> $processedFile;
          echo `md5sum $m | awk '{print " - "  $1}'`   >> $finalFile;
+         retFile=0;
+         retExt=0;
         fi
       fi 	 
   else
-    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    retFile=0;
+    retExt=0;
     for t in $includeList
     do
-	if [ $ext == $t ]
+    if [ $ext == $t ]
     then
-    retInc=1;
+    retExt=1;
+    fi
+    if [ $file == $t ]
+    then
+    retFile=1;
     fi
     done
-	if [ $retInc == 1 ]
+    if [ $retExt == 1 -o $retFile == 1 ]
     then
      echo -n `basename $m` >> $finalFile;
      echo -n `basename $m` >> $processedFile;
@@ -236,9 +250,10 @@ then
                                print t;
                        }' >> $processedFile;  
      echo `md5sum $m | awk '{print " - "  $1}'`   >> $finalFile;
+     retFile=1;
+     retExt=1;
   fi
   fi
-fi
 fi
 fi
 done
@@ -249,8 +264,6 @@ cd $2;
 ## bz2File function starts here ##
 bz2File(){
 
-#dir=`echo $1 | awk -F. '{t="";for(i=1;i<=NF-1;i++){ t=t$i"."} printf("%s",t)}'`;
-#dir=`echo "${dir%?}"`;
 dir=`echo $1 | awk -F. '{print $1}'`;
 mkdir -p $dir
 cd $dir;
@@ -264,8 +277,6 @@ file=`echo $l | awk -F/ '{print $NF}'`;
 ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
-retInc=0;
-#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
 for s in $excludeList
 do
 if [ $file == $s ]
@@ -278,9 +289,7 @@ retExt=1;
 fi
 done
 
-if [ $retFile != 1 ]
-then
-if [ $retExt != 1 ]
+if [ $retFile != 1 -o $retExt != 1 ]
 then
   if [ -d $l ] ; then
      folder $l `pwd`;
@@ -298,15 +307,20 @@ then
        if [ $unwar == 'true' ];then
        zipFile $l `pwd`;
        else
-         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         retFile=0;
+         retExt=0;
          for t in $includeList
          do
-	     if [ $ext == $t ]
+	 if [ $ext == $t ]
          then
-         retInc=1;
+         retExt=1;
+         fi
+         if [ $file == $t ]
+         then
+         retFile=1;
          fi
          done
-         if [ $retInc == 1 ]
+         if [ $retExt == 1 -o $retFile == 1 ]
          then
          echo -n `basename $l` >> $finalFile;
          echo -n `basename $l` >> $processedFile;
@@ -323,18 +337,25 @@ then
                                print t;
                        }' >> $processedFile;
          echo `md5sum $l | awk '{print " - "  $1}'`   >> $finalFile;
+         retFile=0;
+         retExt=0; 
         fi
       fi 
   else
-    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    retFile=0;
+    retExt=0;
     for t in $includeList
     do
-	if [ $ext == $t ]
+    if [ $ext == $t ]
     then
-    retInc=1;
+    retExt=1;
     fi
+    if [ $file == $t ]
+    then
+    retFile=1;
+    fi 
     done
-	if [ $retInc == 1 ]
+    if [ $retExt == 1 -o $retFile == 1 ]
     then
      echo -n `basename $l` >> $finalFile;
      echo -n `basename $l` >> $processedFile;
@@ -351,9 +372,10 @@ then
                                print t;
                        }' >> $processedFile;
      echo `md5sum $l | awk '{print " - "  $1}'`   >> $finalFile;
+     retFile=0;
+     retExt=0;
   fi
   fi
-fi
 fi
 fi
 done
@@ -374,8 +396,6 @@ file=`echo $k | awk -F/ '{print $NF}'`;
 ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
-retInc=0;
-#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
 for s in $excludeList
 do
 if [ $file == $s ]
@@ -388,9 +408,7 @@ retExt=1;
 fi
 done
 
-if [ $retFile != 1 ]
-then
-if [ $retExt != 1 ]
+if [ $retFile != 1 -o $retExt != 1 ]
 then
 if [ -d $k ] ; then
     folder $k `pwd`;
@@ -408,15 +426,20 @@ elif [[ $k =~ \.war$ ]]; then
        if [ $unwar == 'true' ];then
        zipFile $k `pwd`;
        else
-         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         retFile=0;
+         retExt=0; 
          for t in $includeList
          do
-	     if [ $ext == $t ]
+	 if [ $ext == $t ]
          then
-         retInc=1;
+         retExt=1;
+         fi
+         if [ $file == $t ]
+         then
+         retFile=1;
          fi
          done
-         if [ $retInc == 1 ]
+         if [ $retExt == 1 -o $retFile == 1 ]
          then
          echo -n `basename $k` >> $finalFile;
          echo -n `basename $k` >> $processedFile;
@@ -433,18 +456,25 @@ elif [[ $k =~ \.war$ ]]; then
                                print t;
                        }' >> $processedFile;
          echo `md5sum $k | awk '{print " - "  $1}'`   >> $finalFile;
+         retFile=0;
+         retExt=0;
         fi
       fi 	
 else
-    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    retFile=0;
+    retExt=0;
     for t in $includeList
     do
-	if [ $ext == $t ]
+    if [ $ext == $t ]
     then
-    retInc=1;
+    retExt=1;
     fi
+    if [ $file == $t ]
+    then
+    retFile=1;
+    fi 
     done
-	if [ $retInc == 1 ]
+	if [ $retExt == 1 -o $retFile == 1 ]
     then
     echo -n `basename $k` >> $finalFile;
     echo -n `basename $k` >> $processedFile;
@@ -461,7 +491,8 @@ else
                                print t;
                        }' >> $processedFile;
     echo `md5sum $k | awk '{print " - "  $1}'`   >> $finalFile;
-fi
+    retFile=0;
+    retExt=0;
 fi
 fi
 fi
@@ -527,8 +558,6 @@ file=`echo $i | awk -F/ '{print $NF}'`;
 ext=`echo "${file##*.}"`;
 retFile=0;
 retExt=0;
-retInc=0;
-#for s in $(cat $configFile | grep exclude | sed -n 1'p' | tr ',' '\n')
 for s in $excludeList
 do
 if [ $file == $s ]
@@ -540,9 +569,7 @@ then
 retExt=1;
 fi
 done
-if [ $retFile != 1 ]
-then
-if [ $retExt != 1 ]
+if [ $retFile != 1 -o $retExt != 1 ]
 then
   if [ -d $i ] ; then
      folder $i `pwd`;
@@ -560,15 +587,20 @@ then
        if [ $unwar == 'true' ];then
        zipFile $i `pwd`;
        else
-         #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         retFile=0;
+         retExt=0;
          for t in $includeList
          do
-	     if [ $ext == $t ]
+	 if [ $ext == $t ]
          then
-         retInc=1;
+         retExt=1;
          fi
+         if [ $file == $t ]
+         then
+         retFile=1;
+         fi  
          done
-         if [ $retInc == 1 ]
+         if [ $retExt == 1 -o $retFile == 1 ]
          then
          echo -n `basename $i` >> $finalFile;
          echo -n `basename $i` >> $processedFile;
@@ -585,18 +617,25 @@ then
                                print t;
                        }' >> $processedFile;
          echo `md5sum $i | awk '{print " - "  $1}'`   >> $finalFile;
+         retFile=0;
+         retExt=0;
         fi
       fi      
   else
-    #for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+    retFile=0;
+    retExt=0;
     for t in $includeList
     do
-	if [ $ext == $t ]
+    if [ $ext == $t ]
     then
-    retInc=1;
+    retExt=1;
     fi
+    if [ $file == $t ]
+    then
+    retFile=1;
+    fi 
     done
-    if [ $retInc == 1 ]
+    if [ $retInc == 1 -o $retFile == 1 ]
     then
     echo -n `basename $i` >> $finalFile;
     echo -n `basename $i` >> $processedFile;
@@ -613,9 +652,10 @@ then
                                print t;
                        }' >> $processedFile;
     echo `md5sum $i | awk '{print " - "  $1}'`   >> $finalFile;
+    retFile=0;
+    retExt=0;
   fi
   fi
-fi
 fi
 fi
 done
