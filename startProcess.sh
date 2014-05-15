@@ -2,7 +2,7 @@
 #set -x;
 
 if [ $# -lt 3 ] ; then
-echo -e "Usage: $0 <absolute path to build> <absolute path to a temporary directory> <outputfile name>\n"  ;
+echo -e "Usage: $0 <absolute path to build> <absolute path to a temporary directory> <outputfile name> <unwar=true/false>\n"  ;
 exit 0 ;
 fi
 
@@ -16,7 +16,7 @@ tempSize=`df -kP $2 | awk '$3 ~ /[0-9]+/ { print $4 }'`;
 fi
 buildSize=$(( buildSize * 3 ));
 if [ $tempSize -ge $buildSize ]; then
-sh getFileSignature.sh $1 $2 $3 `pwd` &
+sh getFileSignature.sh $1 $2 $3 `pwd` $4 &
 pid=`ps -ef |grep "getFileSignature.sh" | awk '{if ($8 == "sh" && $9 == "getFileSignature.sh") {print $2}}'`;
 echo  -n "Please wait - capturing MD5sum .";
 while [ `ps aux | awk '{print $2 }' | grep $pid 2> /dev/null` ]

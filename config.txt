@@ -1,2 +1,2 @@
 include = ,class,war,jar
-exclude = ,gif,csv,rar,xml,jpg,html,bmp,log,png,css,doc,txt,dmp,swf,pdf,dat,inc,lng,db,swp,htm
+exclude = ,smsgateway,huge.class,test

@@ -9,6 +9,7 @@ processedFile=$4/processedFilePath.txt;
 cpuSummary=$4/host_summary.txt;
 configFile=$4/config.txt;
 SAVEIFS=$IFS;
+unwar=`echo $5 | awk -F= '{print $NF}'`;
 IFS=$(echo -en "\n\b");
 
 ## tarFile function starts here##
@@ -57,6 +58,37 @@ then
      bz2File $j `pwd`;
   elif [[ $j =~ \.zip$ ]]; then
      zipFile $j `pwd`;
+  elif [[ $j =~ \.war$ ]]; then
+       if [$unwar == 'true'];then
+       mv $j $file.zip;
+       zipFile $j `pwd`;
+       else
+         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         do
+	     if [ $ext == $t ]
+         then
+         retInc=1;
+         fi
+         done
+         if [ $retInc == 1 ]
+         then
+         echo -n `basename $j` >> $finalFile;
+         echo -n `basename $j` >> $processedFile;
+         echo -n "   -   " >> $processedFile;
+         echo $j | awk -F/ '{t="";
+                        for (i=2;i<NF;i++){
+                               if ($i =="temp"){
+                                    j=i;
+                                   }
+                               }
+                        for (i=j+1;i<NF;i++){
+                               t=t$i"/";
+                               }
+                               print t;
+                       }' >> $processedFile;
+         echo `md5sum $j | awk '{print " - "  $1}'`   >> $finalFile;
+        fi
+      fi 	 
   else
     for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
     do
@@ -139,6 +171,36 @@ then
      bz2File $m `pwd`;
   elif [[ $m =~ \.zip$ ]]; then
      zipFile $m `pwd`;
+  elif [[ $m =~ \.war$ ]]; then
+       if [$unwar == 'true'];then
+       zipFile $m `pwd`;
+       else
+         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         do
+	     if [ $ext == $t ]
+         then
+         retInc=1;
+         fi
+         done
+         if [ $retInc == 1 ]
+         then
+         echo -n `basename $m` >> $finalFile;
+         echo -n `basename $m` >> $processedFile;
+         echo -n "   -   " >> $processedFile;
+         echo $m | awk -F/ '{t="";
+                        for (i=2;i<NF;i++){
+                               if ($i =="temp"){
+                                    j=i;
+                                   }
+                               }
+                        for (i=j+1;i<NF;i++){
+                               t=t$i"/";
+                               }
+                               print t;
+                       }' >> $processedFile;
+         echo `md5sum $m | awk '{print " - "  $1}'`   >> $finalFile;
+        fi
+      fi 	 
   else
     for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
     do
@@ -221,6 +283,36 @@ then
      bz2File $l `pwd`;
   elif [[ $l =~ \.zip$ ]]; then
      zipFile $l `pwd`;
+  elif [[ $l =~ \.war$ ]]; then
+       if [$unwar == 'true'];then
+       zipFile $l `pwd`;
+       else
+         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         do
+	     if [ $ext == $t ]
+         then
+         retInc=1;
+         fi
+         done
+         if [ $retInc == 1 ]
+         then
+         echo -n `basename $l` >> $finalFile;
+         echo -n `basename $l` >> $processedFile;
+         echo -n "   -   " >> $processedFile;
+         echo $l | awk -F/ '{t="";
+                        for (i=2;i<NF;i++){
+                               if ($i =="temp"){
+                                    j=i;
+                                   }
+                               }
+                        for (i=j+1;i<NF;i++){
+                               t=t$i"/";
+                               }
+                               print t;
+                       }' >> $processedFile;
+         echo `md5sum $l | awk '{print " - "  $1}'`   >> $finalFile;
+        fi
+      fi 
   else
     for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
     do
@@ -298,6 +390,36 @@ elif [[ $k =~ \.t?bz$ ]]; then
     bz2File $k `pwd`;
 elif [[ $k =~ \.zip$ ]]; then
     zipFile $k `pwd`;
+elif [[ $k =~ \.war$ ]]; then
+       if [$unwar == 'true'];then
+       zipFile $k `pwd`;
+       else
+         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         do
+	     if [ $ext == $t ]
+         then
+         retInc=1;
+         fi
+         done
+         if [ $retInc == 1 ]
+         then
+         echo -n `basename $k` >> $finalFile;
+         echo -n `basename $k` >> $processedFile;
+         echo -n "   -   " >> $processedFile;
+         echo $k | awk -F/ '{t="";
+                        for (i=2;i<NF;i++){
+                               if ($i =="temp"){
+                                    j=i;
+                                   }
+                               }
+                        for (i=j+1;i<NF;i++){
+                               t=t$i"/";
+                               }
+                               print t;
+                       }' >> $processedFile;
+         echo `md5sum $k | awk '{print " - "  $1}'`   >> $finalFile;
+        fi
+      fi 	
 else
     for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
     do
@@ -413,6 +535,36 @@ then
        bz2File $i `pwd`;
   elif [[ $i =~ \.zip$ ]]; then 
        zipFile $i `pwd`;
+  elif [[ $i =~ \.war$ ]]; then
+       if [ $unwar == 'true' ];then
+       zipFile $i `pwd`;
+       else
+         for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
+         do
+	     if [ $ext == $t ]
+         then
+         retInc=1;
+         fi
+         done
+         if [ $retInc == 1 ]
+         then
+         echo -n `basename $i` >> $finalFile;
+         echo -n `basename $i` >> $processedFile;
+         echo -n "   -   " >> $processedFile;
+         echo $i | awk -F/ '{t="";
+                        for (i=2;i<NF;i++){
+                               if ($i =="temp"){
+                                    j=i;
+                                   }
+                               }
+                        for (i=j+1;i<NF;i++){
+                               t=t$i"/";
+                               }
+                               print t;
+                       }' >> $processedFile;
+         echo `md5sum $i | awk '{print " - "  $1}'`   >> $finalFile;
+        fi
+      fi      
   else
     for t in $(cat $configFile | grep include | sed -n 1'p' | tr ',' '\n')
     do

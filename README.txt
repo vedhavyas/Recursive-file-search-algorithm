@@ -26,7 +26,7 @@ Usage of the tool :
 ***(NOTE : if the source folder contains unnecessary files,folders which doesnt have to be processed, add those files to exclude list.)
 
 2. startProcess.sh - requires 3 command line arguments
-   Usage: sh startProcess.sh <absolute path to build> <absolute path to a temporary directory> <outputfile name>
+   Usage: sh startProcess.sh <absolute path to build> <absolute path to a temporary directory> <outputfile name> <unwar=true/false>
  
    absolute path to build - The path where the build or the patch exists.
    absolute path to a temporary directory - The path on a filesystem which holds thrice the size of the build.
