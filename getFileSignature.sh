@@ -635,7 +635,7 @@ then
     retFile=1;
     fi 
     done
-    if [ $retInc == 1 -o $retFile == 1 ]
+    if [ $retExt == 1 -o $retFile == 1 ]
     then
     echo -n `basename $i` >> $finalFile;
     echo -n `basename $i` >> $processedFile;
